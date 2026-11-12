@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CGC Finds</title>
+<meta name="description" content="CGC Finds - report lost and found items, search by category and get automatic keyword-based match suggestions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="bar">
+  <div class="inner gutter">
+    <a class="brand" href="#browse" aria-label="CGC Finds home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="9" fill="none" stroke="var(--accent)" stroke-width="3"/><path d="M21 21l7 7" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/><path d="M10 14.5l3 3 6-6.5" fill="none" stroke="var(--found)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      CGC Finds
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#browse" id="nav-browse">Browse items</a>
+      <a href="#report" id="nav-report">Report an item</a>
+    </nav>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="inner gutter">
+    <div>
+      <h1>Lost something on campus? Someone may have already found it.</h1>
+      <p class="lead">Report what you lost or found. CGC Finds compares every report and suggests matches automatically, so the right owner and the right finder meet sooner.</p>
+      <div class="cta">
+        <a class="btn" href="#report" data-type="lost">I lost something</a>
+        <a class="btn ghost" href="#report" data-type="found">I found something</a>
+      </div>
+    </div>
+    <div class="stats" aria-label="Current totals">
+      <div class="stat lost"><b id="s-lost">0</b><span>Still lost</span></div>
+      <div class="stat found"><b id="s-found">0</b><span>Waiting for owner</span></div>
+      <div class="stat done"><b id="s-done">0</b><span>Reunited</span></div>
+    </div>
+  </div>
+</section>
+
+<main class="gutter">
+  <div class="inner">
+
+    <section id="view-browse">
+      <div class="controls">
+        <div class="row">
+          <div class="grow"><input type="search" id="q" placeholder="Search by keyword, e.g. black wallet, phone, keys" aria-label="Search by keyword"></div>
+          <div class="seg" role="group" aria-label="Filter by report type">
+            <button type="button" data-type="all" aria-pressed="true">All</button>
+            <button type="button" data-type="lost" aria-pressed="false">Lost</button>
+            <button type="button" data-type="found" aria-pressed="false">Found</button>
+          </div>
+        </div>
+        <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+        <label class="chk"><input type="checkbox" id="showDone"> Show reunited items</label>
+      </div>
+      <p class="count" id="count" aria-live="polite"></p>
+      <div class="grid" id="grid"></div>
+      <div class="foot" id="foot"></div>
+    </section>
+
+    <section id="view-report" hidden>
+      <div class="report">
+        <div class="card">
+          <h2>Report an item</h2>
+          <p class="sub">The more detail you add, the better the automatic matching works.</p>
+          <form id="form">
+            <div class="fields">
+              <div class="seg" role="radiogroup" aria-label="Report type" style="width:fit-content">
+                <button type="button" data-ftype="lost" aria-pressed="true">I lost it</button>
+                <button type="button" data-ftype="found" aria-pressed="false">I found it</button>
+              </div>
+              <label class="f" for="f-name">Item name
+                <input type="text" id="f-name" name="name" required maxlength="60" placeholder="e.g. Black leather wallet">
+              </label>
+              <label class="f" for="f-cat">Category
+                <select id="f-cat" name="category" required></select>
+              </label>
+              <label class="f" for="f-desc">Description <small>Colour, brand, marks, what is inside</small>
+                <textarea id="f-desc" name="description" required maxlength="300" placeholder="e.g. Brown wallet with a college ID card and a few notes"></textarea>
+              </label>
+              <div class="two">
+                <label class="f" for="f-place"><span id="placeLabel">Where did you lose it?</span>
+                  <input type="text" id="f-place" name="place" required maxlength="80" placeholder="e.g. Central library, 2nd floor">
+                </label>
+                <label class="f" for="f-date">Date
+                  <input type="date" id="f-date" name="date" required>
+                </label>
+              </div>
+              <label class="f" for="f-contact">Your contact <small>Phone number or email, shown on the report</small>
+                <input type="text" id="f-contact" name="contact" required maxlength="80" placeholder="e.g. 98xxx xxxxx or name@example.com">
+              </label>
+              <div><button class="btn" type="submit">Submit report and see matches</button></div>
+            </div>
+          </form>
+        </div>
+        <div class="card how">
+          <h3>How matches are found</h3>
+          <ol>
+            <li>Your item name and description are reduced to keywords. Filler words are dropped and similar words are treated as one, so "mobile" and "phone" count as the same.</li>
+            <li>A lost report is compared with found reports, and the other way round.</li>
+            <li>The score combines shared keywords, the same category and a shared place. Anything of 30% or more is suggested.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
+    <header>
+      <div><h2 id="panelTitle"></h2><p class="sub" id="panelSub"></p></div>
+      <button type="button" class="x" id="panelClose" aria-label="Close">&times;</button>
+    </header>
+    <div id="panelBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
